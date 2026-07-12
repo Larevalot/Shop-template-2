@@ -1,0 +1,20 @@
+---
+---
+
+<button
+  id="cart-icon"
+  class="relative p-2 text-smoke hover:text-neon focus:outline-none focus:ring-2 focus:ring-neon transition-colors duration-200 group"
+  aria-label="Abrir carrito"
+>
+  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path stroke-linecap="square" stroke-linejoin="miter" stroke-width="1.5" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z" />
+  </svg>
+  <span
+    id="cart-count"
+    class="absolute -top-1 -right-1 bg-neon text-carbon text-xs font-mono font-bold h-5 w-5 flex items-center justify-center opacity-0 transition-all duration-200"
+  >
+    0
+  </span>
+  <!-- Hover indicator -->
+  <div class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-neon group-hover:w-full transition-all duration-300"></div>
+</button>

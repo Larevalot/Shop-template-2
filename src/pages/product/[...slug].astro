@@ -1,0 +1,94 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const products = await getCollection('products');
+  return products.map((product) => ({
+    params: { slug: product.id },
+    props: { product },
+  }));
+}
+
+const { product } = Astro.props;
+const { id, nombre, precio, imagen, descripcion, categoria } = product.data;
+const { Content } = await render(product);
+---
+
+<Layout title={`${nombre} // MIMO_SHOP`}>
+  <!-- Breadcrumb -->
+  <nav class="mb-8">
+    <ol class="flex items-center gap-2 text-xs font-mono">
+      <li><a href="/" class="text-smoke hover:text-neon transition-colors">INICIO</a></li>
+      <li class="text-dark-400">/</li>
+      <li class="text-neon uppercase">{nombre}</li>
+    </ol>
+  </nav>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <!-- Image -->
+    <div class="relative border border-dark-300 bg-carbon">
+      <!-- Corner accents -->
+      <div class="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-neon/40"></div>
+      <div class="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-neon/40"></div>
+      <div class="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-neon/40"></div>
+      <div class="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-neon/40"></div>
+
+      <div class="aspect-square overflow-hidden">
+        <img
+          src={imagen}
+          alt={nombre}
+          class="w-full h-full object-cover"
+        />
+      </div>
+    </div>
+
+    <!-- Product info -->
+    <div class="flex flex-col">
+      <!-- Category badge -->
+      <div class="flex items-center gap-3 mb-4">
+        <span class="px-3 py-1 border border-neon/30 text-neon font-mono text-xs uppercase tracking-wider">
+          {categoria}
+        </span>
+        <span class="text-dark-400 font-mono text-xs">ID:{id.toUpperCase()}</span>
+      </div>
+
+      <!-- Name -->
+      <h1 class="text-3xl sm:text-4xl font-mono font-bold text-light mb-4 uppercase tracking-wider">
+        {nombre}
+      </h1>
+
+      <!-- Price -->
+      <div class="flex items-baseline gap-2 mb-6 pb-6 border-b border-dark-300">
+        <span class="text-neon font-mono text-lg">$</span>
+        <span class="text-4xl font-mono font-bold text-neon">{precio.toFixed(2)}</span>
+      </div>
+
+      <!-- Description -->
+      <p class="text-smoke font-mono text-sm leading-relaxed mb-8">{descripcion}</p>
+
+      <!-- Content -->
+      <div class="prose prose-invert max-w-none mb-8 font-mono text-sm text-smoke">
+        <Content />
+      </div>
+
+      <!-- Add to cart -->
+      <div class="mt-auto">
+        <button
+          class="add-to-cart-detail w-full sm:w-auto bg-neon text-carbon font-mono text-sm uppercase tracking-widest py-4 px-8 hover:bg-neon-dim focus:outline-none focus:ring-2 focus:ring-neon focus:ring-offset-2 focus:ring-offset-carbon transition-all duration-300"
+          data-id={id}
+          data-nombre={nombre}
+          data-precio={precio}
+          data-imagen={imagen}
+        >
+          + AGREGAR AL CARRITO
+        </button>
+      </div>
+
+      <!-- Toast -->
+      <div id="toast-detail" class="fixed bottom-4 right-4 bg-neon text-carbon px-6 py-3 font-mono text-sm uppercase tracking-wider shadow-[0_0_20px_rgba(0,255,136,0.5)] opacity-0 pointer-events-none transition-opacity duration-300 z-50">
+        ✓ {nombre} agregado
+      </div>
+    </div>
+  </div>
+</Layout>

@@ -1,0 +1,110 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ProductCard from '../components/ProductCard.astro';
+import { getCollection } from 'astro:content';
+
+const products = await getCollection('products');
+const categories = [...new Set(products.map((p) => p.data.categoria))];
+---
+
+<Layout title="MIMO_SHOP // Industrial Streetwear">
+  <section>
+    <!-- Hero section -->
+    <div class="relative mb-16 py-12 border border-dark-300 bg-steel/30">
+      <!-- Corner accents -->
+      <div class="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-neon"></div>
+      <div class="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-neon"></div>
+      <div class="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-neon"></div>
+      <div class="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-neon"></div>
+
+      <div class="text-center">
+        <div class="flex items-center justify-center gap-3 mb-4">
+          <div class="h-px w-12 bg-neon/30"></div>
+          <span class="text-neon font-mono text-xs tracking-[0.3em] uppercase">Catálogo v2.0</span>
+          <div class="h-px w-12 bg-neon/30"></div>
+        </div>
+        <h1 class="text-4xl sm:text-5xl font-mono font-bold text-light mb-4 tracking-wider">
+          PRODUCTOS<span class="text-neon">_</span>
+        </h1>
+        <p class="text-smoke font-mono text-sm max-w-xl mx-auto">
+          Industrial streetwear y equipamiento tech de alta calidad.
+          <br/>
+          <span class="text-neon">Selecciona tu equipamiento.</span>
+        </p>
+      </div>
+    </div>
+
+    <!-- Category filters -->
+    <div class="flex flex-wrap justify-center gap-2 mb-10">
+      <button
+        class="category-btn active px-4 py-2 font-mono text-xs uppercase tracking-widest border border-neon bg-neon text-carbon hover:bg-neon hover:text-carbon transition-all duration-200"
+        data-category="all"
+      >
+        TODOS
+      </button>
+      {categories.map((cat) => (
+        <button
+          class="category-btn px-4 py-2 font-mono text-xs uppercase tracking-widest border border-dark-300 text-smoke hover:border-neon hover:text-neon transition-all duration-200"
+          data-category={cat}
+        >
+          {cat}
+        </button>
+      ))}
+    </div>
+
+    <!-- Products grid -->
+    <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+      {products.map((product) => (
+        <div class="product-item" data-category={product.data.categoria}>
+          <ProductCard
+            id={product.data.id}
+            nombre={product.data.nombre}
+            precio={product.data.precio}
+            imagen={product.data.imagen}
+            descripcion={product.data.descripcion}
+            slug={product.id}
+          />
+        </div>
+      ))}
+    </div>
+
+    <!-- Bottom status bar -->
+    <div class="mt-16 flex items-center justify-center gap-4 text-dark-400 font-mono text-xs">
+      <span class="w-2 h-2 bg-neon/30 rounded-full"></span>
+      <span>{products.length} PRODUCTOS CARGADOS</span>
+      <span>|</span>
+      <span>{categories.length} CATEGORÍAS</span>
+    </div>
+  </section>
+</Layout>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const buttons = document.querySelectorAll('.category-btn');
+    const items = document.querySelectorAll('.product-item');
+
+    buttons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const category = (btn as HTMLElement).dataset.category;
+
+        // Update active button style
+        buttons.forEach((b) => {
+          b.classList.remove('bg-neon', 'text-carbon', 'border-neon');
+          b.classList.add('border-dark-300', 'text-smoke');
+        });
+        btn.classList.remove('border-dark-300', 'text-smoke');
+        btn.classList.add('bg-neon', 'text-carbon', 'border-neon');
+
+        // Filter items
+        items.forEach((item) => {
+          const itemCategory = (item as HTMLElement).dataset.category;
+          if (category === 'all' || itemCategory === category) {
+            (item as HTMLElement).style.display = '';
+          } else {
+            (item as HTMLElement).style.display = 'none';
+          }
+        });
+      });
+    });
+  });
+</script>

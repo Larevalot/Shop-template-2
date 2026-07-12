@@ -1,0 +1,172 @@
+---
+import CartIcon from '../components/CartIcon.astro';
+import CartDrawer from '../components/CartDrawer.astro';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content="MIMO SHOP — Industrial streetwear y equipamiento tech" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{title}</title>
+  </head>
+  <body class="min-h-screen bg-carbon text-light">
+    <!-- Noise texture overlay -->
+    <div class="noise-overlay"></div>
+
+    <!-- Scanline effect -->
+    <div class="scanline-overlay"></div>
+
+    <header class="sticky top-0 z-30 bg-steel/90 backdrop-blur-md border-b border-neon/20">
+      <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16">
+          <a href="/" class="flex items-center gap-3 group">
+            <div class="w-8 h-8 border-2 border-neon flex items-center justify-center">
+              <span class="text-neon font-mono text-sm font-bold">M</span>
+            </div>
+            <span class="text-xl font-mono font-bold tracking-wider text-light group-hover:text-neon transition-colors">
+              MIMO<span class="text-neon">_</span>SHOP
+            </span>
+          </a>
+          <CartIcon />
+        </div>
+      </nav>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10">
+      <slot />
+    </main>
+
+    <footer class="bg-steel/50 border-t border-neon/10 mt-auto relative z-10">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p class="text-smoke font-mono text-xs">
+            © {new Date().getFullYear()} MIMO_SHOP // TODOS LOS DERECHOS RESERVADOS
+          </p>
+          <div class="flex items-center gap-4 text-smoke text-xs font-mono">
+            <span class="w-2 h-2 bg-neon rounded-full animate-pulse"></span>
+            SISTEMA OPERATIVO v2.0
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <CartDrawer />
+  </body>
+</html>
+
+<script>
+  import '../scripts/init';
+</script>
+
+<style is:global>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+  :root {
+    --font-mono: 'JetBrains Mono', 'SF Mono', 'Cascadia Code', Consolas, monospace;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    font-family: 'Avenir Next', 'Segoe UI', system-ui, sans-serif;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  main {
+    flex: 1;
+  }
+
+  /* Industrial noise texture */
+  .noise-overlay {
+    position: fixed;
+    top: -50%;
+    left: -50%;
+    right: -50%;
+    bottom: -50%;
+    width: 200%;
+    height: 200%;
+    background: transparent url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E") repeat;
+    animation: grain 8s steps(10) infinite;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Scanline effect */
+  .scanline-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0, 0, 0, 0.03) 2px,
+      rgba(0, 0, 0, 0.03) 4px
+    );
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* Industrial heading style */
+  h1, h2, h3, h4 {
+    font-family: var(--font-mono);
+    letter-spacing: 0.05em;
+  }
+
+  /* Industrial scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #0A0A0A;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #353555;
+    border: 1px solid #00FF88;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #00FF88;
+  }
+
+  /* Industrial selection */
+  ::selection {
+    background: #00FF88;
+    color: #0A0A0A;
+  }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .noise-overlay,
+    .scanline-overlay {
+      display: none;
+    }
+
+    * {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+</style>
