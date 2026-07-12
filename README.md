@@ -70,7 +70,7 @@ Crear un archivo `.env` en la raíz del proyecto:
 
 ```env
 # Número de WhatsApp del negocio (sin + ni espacios)
-PUBLIC_WHATSAPP_NUMBER=593995341210
+PUBLIC_WHATSAPP_NUMBER=59399531916
 ```
 
 ### Agregar productos
