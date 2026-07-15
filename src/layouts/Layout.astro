@@ -1,6 +1,7 @@
 ---
 import CartIcon from '../components/CartIcon.astro';
 import CartDrawer from '../components/CartDrawer.astro';
+import Toast from '../components/Toast.astro';
 import '../styles/global.css';
 
 interface Props {
@@ -61,6 +62,7 @@ const { title } = Astro.props;
     </footer>
 
     <CartDrawer />
+    <Toast />
   </body>
 </html>
 

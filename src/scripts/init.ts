@@ -24,6 +24,25 @@ const emptyCartEl = document.getElementById('empty-cart');
 const cartTotalEl = document.getElementById('cart-total');
 const checkoutBtn = document.getElementById('checkout-btn') as HTMLButtonElement | null;
 const cartNotes = document.getElementById('cart-notes') as HTMLTextAreaElement | null;
+const globalToast = document.getElementById('global-toast');
+const toastMessage = document.getElementById('toast-message');
+
+// --- Global toast ---
+let toastTimeout: ReturnType<typeof setTimeout> | null = null;
+
+function showToast(message: string) {
+  if (!globalToast || !toastMessage) return;
+  if (toastTimeout) clearTimeout(toastTimeout);
+
+  toastMessage.textContent = message;
+  globalToast.classList.remove('opacity-0', 'pointer-events-none', 'translate-y-4');
+  globalToast.classList.add('opacity-100', 'pointer-events-auto', 'translate-y-0');
+
+  toastTimeout = setTimeout(() => {
+    globalToast.classList.remove('opacity-100', 'pointer-events-auto', 'translate-y-0');
+    globalToast.classList.add('opacity-0', 'pointer-events-none', 'translate-y-4');
+  }, 2000);
+}
 
 // --- Cart icon counter ---
 cartCount.subscribe((count) => {
@@ -74,13 +93,13 @@ function renderCart() {
         <p class="text-sm text-gray-500">$${item.precio.toFixed(2)} c/u</p>
         <div class="flex items-center gap-2 mt-2">
           <button
-            class="qty-btn w-8 h-8 flex items-center justify-center bg-gray-200 rounded-full hover:bg-gray-300 transition-colors"
+            class="qty-btn w-8 h-8 flex items-center justify-center bg-red-100 text-red-600 rounded-full hover:bg-red-200 transition-colors font-bold"
             data-id="${item.id}"
             data-action="decrease"
           >−</button>
-          <span class="w-8 text-center font-medium">${item.cantidad}</span>
+          <span class="w-8 text-center font-bold text-gray-800">${item.cantidad}</span>
           <button
-            class="qty-btn w-8 h-8 flex items-center justify-center bg-gray-200 rounded-full hover:bg-gray-300 transition-colors"
+            class="qty-btn w-8 h-8 flex items-center justify-center bg-green-100 text-green-600 rounded-full hover:bg-green-200 transition-colors font-bold"
             data-id="${item.id}"
             data-action="increase"
           >+</button>
@@ -149,18 +168,7 @@ document.addEventListener('click', (e) => {
   if (!id || !nombre || !precio || !imagen) return;
 
   addToCart({ id, nombre, precio: parseFloat(precio), imagen });
-
-  // Show toast
-  const article = btn.closest('article');
-  const toast = article?.querySelector('.toast');
-  if (toast) {
-    toast.classList.remove('opacity-0');
-    toast.classList.add('opacity-100');
-    setTimeout(() => {
-      toast.classList.remove('opacity-100');
-      toast.classList.add('opacity-0');
-    }, 2000);
-  }
+  showToast(`${nombre} agregado`);
 });
 
 // --- Detail page add-to-cart ---
@@ -172,14 +180,5 @@ document.addEventListener('click', (e) => {
   if (!id || !nombre || !precio || !imagen) return;
 
   addToCart({ id, nombre, precio: parseFloat(precio), imagen });
-
-  const toast = document.getElementById('toast-detail');
-  if (toast) {
-    toast.classList.remove('opacity-0');
-    toast.classList.add('opacity-100');
-    setTimeout(() => {
-      toast.classList.remove('opacity-100');
-      toast.classList.add('opacity-0');
-    }, 3000);
-  }
+  showToast(`${nombre} agregado`);
 });
