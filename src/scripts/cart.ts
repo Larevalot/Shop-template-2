@@ -31,13 +31,18 @@ function saveCart(items: Record<string, CartItem>) {
 
 export const cartItems = atom<Record<string, CartItem>>({});
 
+let cartInitialized = false;
+
 export function initCart() {
   const stored = loadCart();
   cartItems.set(stored);
+  cartInitialized = true;
 }
 
 cartItems.subscribe((items) => {
-  saveCart(items);
+  if (cartInitialized) {
+    saveCart(items);
+  }
 });
 
 export function addToCart(item: Omit<CartItem, 'cantidad'>) {
